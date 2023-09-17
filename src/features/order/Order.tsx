@@ -1,6 +1,6 @@
 // Test ID: IIDSAT
 
-import { useLoaderData } from 'react-router-dom';
+import { useLoaderData, LoaderFunctionArgs } from 'react-router-dom';
 import { getOrder } from '../../services/apiRestaurant';
 import {
   calcMinutesLeft,
@@ -76,7 +76,7 @@ function Order() {
   );
 }
 
-export async function loader({ params }: any) {
+export async function loader({ params }: LoaderFunctionArgs) {
   const order = await getOrder(params.orderId);
   return order;
 }
