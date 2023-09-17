@@ -1,14 +1,19 @@
 import { Pizza } from './pizzaTypes';
 import { Cart } from '../cart/cartTypes';
-import { useAppDispatch } from '../../hooks';
+import { useAppDispatch, useAppSelector } from '../../hooks';
 import { formatCurrency } from '../../utils/helpers';
 import Button from '../../ui/Button';
-import { addItem } from '../cart/cartSlice';
+import { addItem, getCurrentQuantityById } from '../cart/cartSlice';
+import DeleteItem from '../cart/DeleteItem';
+import UpdateItemQuantity from '../cart/UpdateItemQuantity';
 
 function MenuItem({ pizza }: { pizza: Pizza }) {
   const dispatch = useAppDispatch();
 
   const { id, name, unitPrice, ingredients, soldOut, imageUrl } = pizza;
+
+  const currentQuantity = useAppSelector(getCurrentQuantityById(id));
+  const isInCart = currentQuantity > 0;
 
   function handleAddToCart() {
     const newItem: Cart = {
@@ -42,7 +47,17 @@ function MenuItem({ pizza }: { pizza: Pizza }) {
             </p>
           )}
 
-          {!soldOut && (
+          {isInCart && (
+            <div className="flex items-center gap-3 sm:gap-8">
+              <UpdateItemQuantity
+                pizzaId={id}
+                currentQuantity={currentQuantity}
+              />
+              <DeleteItem pizzaId={id} />
+            </div>
+          )}
+
+          {!soldOut && !isInCart && (
             <Button type="small" onClick={handleAddToCart}>
               Add to cart
             </Button>

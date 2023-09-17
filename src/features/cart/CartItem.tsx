@@ -1,9 +1,13 @@
 import { Cart } from './cartTypes';
 import { formatCurrency } from '../../utils/helpers';
-import Button from '../../ui/Button';
+import { useAppSelector } from '../../hooks';
+import DeleteItem from './DeleteItem';
+import UpdateItemQuantity from './UpdateItemQuantity';
+import { getCurrentQuantityById } from './cartSlice';
 
 function CartItem({ item }: { item: Cart }) {
   const { pizzaId, name, quantity, totalPrice } = item;
+  const currentQuantity = useAppSelector(getCurrentQuantityById(pizzaId));
 
   return (
     <li className="py-3 sm:flex sm:items-center sm:justify-between">
@@ -12,7 +16,12 @@ function CartItem({ item }: { item: Cart }) {
       </p>
       <div className="flex items-center justify-between sm:gap-6">
         <p className="text-sm font-bold">{formatCurrency(totalPrice)}</p>
-        <Button type="small">Delete</Button>
+
+        <UpdateItemQuantity
+          pizzaId={pizzaId}
+          currentQuantity={currentQuantity}
+        />
+        <DeleteItem pizzaId={pizzaId} />
       </div>
     </li>
   );
